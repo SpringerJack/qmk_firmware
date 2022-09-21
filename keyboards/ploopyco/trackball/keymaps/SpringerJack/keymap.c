@@ -1,7 +1,13 @@
 #include QMK_KEYBOARD_H
+#include "wait.h"
+
+/* generic code */
+extern bool    is_drag_scroll;  
+int16_t        dsAccX          = 0;
+int16_t        dsAccY          = 0;
+const uint16_t dsThreshhold    = 10;
 
 /* Tap Dance Config */
-/* generic code */
 typedef enum {
   TD_NONE,
   TD_UNKNOWN,
@@ -34,6 +40,8 @@ static keyrecord_t dummy_record = {
         },
     .tap = {0},
 };
+
+
 
 // Filling the dummy_record for processing with `process_record_kb`
 void setup_dummy_record(uint8_t col, uint8_t row, bool pressed) {
@@ -132,4 +140,34 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   default:
     return 200;
   }
+}
+
+int16_t sign(int16_t n) {
+  return (int16_t) ((n > 0) - (n < 0));
+}
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+  if (is_drag_scroll) {
+    dsAccX += mouse_report.h;
+    dsAccY += mouse_report.v;
+
+    if (abs(dsAccX) > dsThreshhold) {
+      mouse_report.h = sign(dsAccX);
+      dsAccX %= dsThreshhold;
+    } else
+      mouse_report.h = 0;
+
+    if (abs(dsAccY) > dsThreshhold) {
+      mouse_report.v = sign(dsAccY);
+      dsAccY %= dsThreshhold;
+    } else
+      mouse_report.v = 0;
+  } 
+
+  return mouse_report;
+}
+
+
+bool encoder_update_user(uint8_t index, bool clockwise) {
+  return false;
 }
