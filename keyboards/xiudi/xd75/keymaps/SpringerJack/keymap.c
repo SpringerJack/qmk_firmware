@@ -29,104 +29,60 @@ enum layer_names { _DE, _1, _2, _3, _4, _5, _6, _7, _8, _9, _vim };
 
 enum my_keycodes { QWERTZ, CUSTOM, DELWORD };
 
-/* Tap Dance Config */
-/* generic code */
-typedef enum {
-  TD_NONE,
-  TD_UNKNOWN,
-  TD_SINGLE_TAP,
-  TD_TAP_HOLD,
-  TD_DOUBLE_TAP,
-  TD_SINGLE_HOLD
-} td_state_t;
+enum { TD_THUMBMOD_L, TD_THUMBMOD_R };
 
-typedef struct {
-  bool is_press_action;
-  td_state_t state;
-} td_tap_t;
+static bool thumbmod_cleanup_necessary = false;
 
-enum { X_UPPER_THUMB };
+void finished_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
+  thumbmod_cleanup_necessary = state->count;
+  switch (state->count) {
+    case 1:
+      if (state->pressed)
+	register_code(KC_RCTL);
+      else
+	add_oneshot_mods(MOD_RCTL);
+      break;
+    case 2:
+      if (state->pressed)
+	register_code(KC_LALT);
+      else
+	add_oneshot_mods(MOD_LALT);
+      break;
+  }
+}
 
-static td_tap_t xtap_state = {.is_press_action = 1, .state = TD_NONE};
 
-/* Functions for sending custom keycodes within a tap dance */
-static keyrecord_t dummy_record = {
-    .event =
-        {
-            .key =
-                {
-                    .col = 0,
-                    .row = 0,
-                },
-            .pressed = 0,
-            .time = 0,
-        },
-    .tap = {0},
+void reset_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
+  if (thumbmod_cleanup_necessary)
+    switch (state->count) {
+      case 1:
+	unregister_code(KC_RCTL);
+	break;
+      case 2:
+	unregister_code(KC_LALT);
+	break;
+    }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  // Tap once for LCTL, twice for LALT
+  [TD_THUMBMOD_L] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, finished_thumbmod, reset_thumbmod),
+  /* [TD_THUMBMOD_L] = ACTION_TAP_DANCE_FN(thumbdance), */
+  [TD_THUMBMOD_R] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, finished_thumbmod, reset_thumbmod)
 };
 
-// Filling the dummy_record for processing with `process_record_kb`
-void setup_dummy_record(uint8_t col, uint8_t row, bool pressed) {
-  dummy_record.event.key.col = col;
-  dummy_record.event.key.row = row;
-  dummy_record.event.pressed = pressed;
-  dummy_record.event.time = timer_read();
-}
-
-// Register a custom defined keycode with `process_record_kb`
-void register_custom_keycode(uint16_t keycode, uint8_t col, uint8_t row) {
-  setup_dummy_record(col, row, true);
-  process_record_kb(keycode, &dummy_record);
-}
-
-// Unregister a custom defined keycode with `process_record_kb`
-void unregister_custom_keycode(uint16_t keycode, uint8_t col, uint8_t row) {
-  setup_dummy_record(col, row, false);
-  process_record_kb(keycode, &dummy_record);
-}
-
-// Tapping a custom keycode
-void tap_custom_keycode(uint16_t keycode, uint8_t col, uint8_t row) {
-  register_custom_keycode(keycode, col, row);
-  wait_ms(10);
-  unregister_custom_keycode(keycode, col, row);
-}
-/* End functions for sending custom keycodes within a tap dance */
-
-td_state_t get_dance(qk_tap_dance_state_t *state) {
-  bool tap_action = state->interrupted || !state->pressed;
-  switch (state->count) {
-  case 1:
-    return tap_action ? TD_SINGLE_TAP : TD_SINGLE_HOLD;
-  case 2:
-    return tap_action ? TD_DOUBLE_TAP : TD_TAP_HOLD;
-  default:
-    return TD_UNKNOWN;
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case TD_THUMBMOD_L:
+    case TD_THUMBMOD_R:
+      return 150;
+    default:
+      return 200;
   }
 }
 
-/* Tap Dance for Button 3 == Upper Thumb */
-void x_finished_btn3(qk_tap_dance_state_t *state, void *user_data) {
-  xtap_state.state = get_dance(state);
-  switch (xtap_state.state) {
-  default:
-    return;
-  }
-}
+uint16_t control_pressed = 0;
 
-void x_reset_btn3(qk_tap_dance_state_t *state, void *user_data) {
-  switch (xtap_state.state) {
-  default:
-    return;
-  }
-  xtap_state.state = TD_NONE;
-}
-/* End Tap Dance for Button 3 */
-
-/* Tap Dance Keys */
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [X_UPPER_THUMB] =
-        ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished_btn3, x_reset_btn3)};
-/* End Tap Dance Config */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -135,15 +91,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [_DE] = LAYOUT_ortho_5x15(
 
-        KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_INS, KC_DEL, KC_PSCR, KC_6,
-        KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T,
-        KC_VOLD, KC_MUTE, KC_VOLU, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC,
-        KC_CLCK, KC_A, KC_S, KC_D, KC_F, KC_G, KC_NO, KC_NO, C(KC_BSPC), KC_H,
-        KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_LSFT, KC_Z, KC_X, KC_C, KC_V,
-        KC_B, KC_COPY, KC_PSTE, KC_NO, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH,
-        KC_RSFT, KC_LCTL, KC_LGUI, KC_LALT, KC_CLCK, LT(_4, KC_MINS), KC_SPC,
-        MO(_vim), TG(_7), KC_RCTL, KC_ENT, LT(_4, KC_0), KC_NUHS, KC_LGUI,
-        KC_MINS, OSL(_9)),
+        KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_INS, KC_DEL, KC_PSCR, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS,
+	KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_VOLD, KC_MUTE, KC_VOLU, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC,
+	KC_CLCK, KC_A, KC_S, KC_D, KC_F, KC_G, C(KC_F3), C(KC_F1), C(KC_BSPC), KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,
+	KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_COPY, KC_PSTE, KC_NO, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
+	KC_LCTL, KC_LGUI, KC_LALT, KC_CLCK, LT(_4, KC_MINS), KC_SPC, /*MO(_vim)*/TD(TD_THUMBMOD_L), TG(_7), TD(TD_THUMBMOD_R), KC_ENT, LT(_4, KC_0), KC_NUHS, KC_LGUI, KC_MINS, OSL(_9)),
 
     /* Neo-Qwertz
      * .-----------------------------------------------------------------------------------------------------------------------------.---------
@@ -430,42 +382,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-  /*case QWERTZ:
+    /*case QWERTZ:
       set_single_persistent_default_layer(_DE);
       break;
-  case CUSTOM:
+      case CUSTOM:
       set_single_persistent_default_layer(_1);
       break;
-      */
-  case DELWORD:
-    if (record->event.pressed) {
-      SEND_STRING(SS_LCTL(SS_TAP(X_BSPC)));
-    }
-    break;
+    */
+    case DELWORD:
+      if (record->event.pressed) {
+	SEND_STRING(SS_LCTL(SS_TAP(X_BSPC)));
+      }
+      break;
+    case TD(TD_THUMBMOD_R):
+    case TD(TD_THUMBMOD_L):
+      if (record->event.pressed) {
+	if (record->event.pressed && control_pressed++ > 0) {
+	  clear_oneshot_mods();
+	  tap_code16(C(KC_F3));
+	  return false;
+	}
+      } else {
+	control_pressed--;
+      }
+      break;
   }
   return true;
 }
-/*
-**
-bool process_record_user( uint16_t keycode, keyrecord_t *record ) {
-    switch (keycode){
-        case KC_RSFT:
-        case KC_LSFT:
-            if (record->event.pressed && shifted){
-                SEND_STRING(SS_TAP(X_LCAP));
-                return true;
-            }
-            shifted = record->event.pressed;
-            break;
-    }
-    return true;
-}
-
-
-bool key(uint16_t k1, uint16_t k2){
-    if (recird)
-
-
-}
-**
- */
