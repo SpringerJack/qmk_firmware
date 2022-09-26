@@ -34,7 +34,7 @@ enum { TD_THUMBMOD_L, TD_THUMBMOD_R };
 static bool thumbmod_cleanup_necessary = false;
 
 void finished_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
-  thumbmod_cleanup_necessary = state->count;
+  thumbmod_cleanup_necessary = state->pressed;
   switch (state->count) {
     case 1:
       if (state->pressed)
@@ -48,6 +48,16 @@ void finished_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
       else
 	add_oneshot_mods(MOD_LALT);
       break;
+    case 3:
+      if (state->pressed) {
+	register_code(KC_LALT);
+	register_code(KC_RCTL);
+      }
+      else {
+	add_oneshot_mods(MOD_LALT);
+	add_oneshot_mods(MOD_RCTL);
+      }
+      break;
   }
 }
 
@@ -60,6 +70,10 @@ void reset_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
 	break;
       case 2:
 	unregister_code(KC_LALT);
+	break;
+      case 3:
+	unregister_code(KC_LALT);
+	unregister_code(KC_RCTL);
 	break;
     }
 }
