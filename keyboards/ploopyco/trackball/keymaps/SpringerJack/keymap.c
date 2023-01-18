@@ -6,7 +6,7 @@
 extern bool    is_drag_scroll;  
 int16_t        dsAccX          = 0;
 int16_t        dsAccY          = 0;
-const uint16_t dsThreshhold    = 10;
+const uint16_t dsThreshhold    = 5;
 
 static td_tap_t xtap_state = {.is_press_action = 1, .state = TD_NONE};
 
