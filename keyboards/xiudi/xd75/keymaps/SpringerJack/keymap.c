@@ -22,6 +22,7 @@
 #include QMK_KEYBOARD_H
 #include "keymap_german.h"
 #include "keymap_neo2.h"
+#include "features/achordion.h"
 
 enum layer_names { _DE, _1, _4, _5, _6, _7, _8, _9 };
 // int shifted = 0;
@@ -105,11 +106,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [_DE] = LAYOUT_ortho_5x15(
 
-        KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_INS, KC_DEL, KC_PSCR, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS,
-	KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_VOLD, KC_MUTE, KC_VOLU, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC,
-	KC_CAPS, KC_A, KC_S, KC_D, KC_F, KC_G, C(KC_F3), C(KC_F1), C(KC_BSPC), KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,
-	KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_COPY, KC_PSTE, KC_NO, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-	KC_LCTL, KC_LGUI, KC_LALT, KC_CAPS, LT(_4, KC_MINS), KC_SPC, /*MO(_vim)*/TD(TD_THUMBMOD_L), TG(_7), TD(TD_THUMBMOD_R), KC_ENT, LT(_4, KC_0), KC_NUHS, KC_LGUI, KC_MINS, OSL(_9)),
+        KC_ESC , KC_1,    KC_2,    KC_3,    KC_4,            KC_5,     KC_INS,            KC_DEL,   KC_PSCR,           KC_6,   KC_7,           KC_8,    KC_9,    KC_0,    KC_MINS,
+	KC_TAB , KC_Q,    KC_W,    KC_E,    KC_R,            KC_T,     KC_VOLD,           KC_MUTE,  KC_VOLU,           KC_Y,   KC_U,           KC_I,    KC_O,    KC_P,    KC_LBRC,
+	KC_CAPS, MT(MOD_LALT, KC_A),    MT(MOD_LGUI, KC_S),    MT(MOD_LCTL, KC_D),    MT(MOD_LSFT, KC_F),            KC_G,     C(KC_F3),          C(KC_F1), C(KC_BSPC),        KC_H,   MT(MOD_RSFT, KC_J),           MT(MOD_RCTL, KC_K),    MT(MOD_LGUI, KC_L),    MT(MOD_LALT, KC_SCLN), KC_QUOT,
+	KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,            KC_B,     KC_COPY,           KC_PSTE,  KC_NO,             KC_N,   KC_M,           KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+	KC_LCTL, KC_LGUI, KC_LALT, KC_CAPS, LT(_4, KC_MINS), KC_SPC,   TD(TD_THUMBMOD_L), TG(_7),   TD(TD_THUMBMOD_R), KC_ENT, LT(_4, KC_0),   KC_NUHS, KC_LGUI, KC_MINS, OSL(_9)),
 
     /* NavNum
 
@@ -321,4 +322,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
   return true;
+}
+
+void matrix_scan_user(void) {
+  achordion_task();
 }
