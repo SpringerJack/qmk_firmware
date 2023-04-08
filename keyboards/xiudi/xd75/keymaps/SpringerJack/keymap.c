@@ -23,7 +23,7 @@
 #include "keymap_german.h"
 #include "keymap_neo2.h"
 
-enum layer_names { _DE, _1, _2, _3, _4, _5, _6, _7, _8, _9, _vim };
+enum layer_names { _DE, _1, _4, _5, _6, _7, _8, _9 };
 // int shifted = 0;
 // bool key(uint16_t k1, uint16_t k2);
 
@@ -33,7 +33,7 @@ enum { TD_THUMBMOD_L, TD_THUMBMOD_R };
 
 static bool thumbmod_cleanup_necessary = false;
 
-void finished_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
+void finished_thumbmod(tap_dance_state_t *state, void *user_data) {
   thumbmod_cleanup_necessary = state->pressed;
   switch (state->count) {
     case 1:
@@ -62,7 +62,7 @@ void finished_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 
-void reset_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
+void reset_thumbmod(tap_dance_state_t *state, void *user_data) {
   if (thumbmod_cleanup_necessary)
     switch (state->count) {
       case 1:
@@ -78,7 +78,7 @@ void reset_thumbmod(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
   // Tap once for LCTL, twice for LALT
   [TD_THUMBMOD_L] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, finished_thumbmod, reset_thumbmod),
   /* [TD_THUMBMOD_L] = ACTION_TAP_DANCE_FN(thumbdance), */
@@ -107,101 +107,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_INS, KC_DEL, KC_PSCR, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS,
 	KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_VOLD, KC_MUTE, KC_VOLU, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC,
-	KC_CLCK, KC_A, KC_S, KC_D, KC_F, KC_G, C(KC_F3), C(KC_F1), C(KC_BSPC), KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,
+	KC_CAPS, KC_A, KC_S, KC_D, KC_F, KC_G, C(KC_F3), C(KC_F1), C(KC_BSPC), KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,
 	KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_COPY, KC_PSTE, KC_NO, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-	KC_LCTL, KC_LGUI, KC_LALT, KC_CLCK, LT(_4, KC_MINS), KC_SPC, /*MO(_vim)*/TD(TD_THUMBMOD_L), TG(_7), TD(TD_THUMBMOD_R), KC_ENT, LT(_4, KC_0), KC_NUHS, KC_LGUI, KC_MINS, OSL(_9)),
-
-    /* Neo-Qwertz
-     * .-----------------------------------------------------------------------------------------------------------------------------.---------
-     * | Esc    | 1   °  | 2   §  | 3   ℓ  | 4   »  | 5   «  | INSERT | DELETE |
-     * 6  $   | 7    € | 8   „  | 9     “| 0    ” | ß   ẞ  | Back   |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * |  Tab   | Q      | W      | E      | R      | T      | VolM   | PRINT  |
-     * Z      | U      | I      | O      | P      | ü      | ̂       |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * |  Mod3  | A      | S      | D      | F      | G      | Vol-   | Vol+   |
-     * H      | J      | K      | L      | Ö      | ä      | ̀       |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * | LShift | Y      | X      | C      | V      | B      | Copy   | Paste  |
-     * N      | M      | , ;    | . :    | - —    | RShift |  ́      |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * | Ctrl   |  Super |  LAlt  | Mod3   |  Mod4  | Space  | F-Layer| Mouse-L|
-     * Enter  | Mod3   | Mod4   | Super  | Esc    |  RCtl  | FN     |
-     * '-----------------------------------------------------------------------------------------------------------------------------'---------
-     */
-    [_1] = LAYOUT_ortho_5x15(
-        KC_ESC, NE_1, NE_2, NE_3, NE_4, NE_5, KC_INS, KC_DEL, KC_BSPC, NE_6,
-        NE_7, NE_8, NE_9, NE_0, DE_SS, KC_TAB, DE_Q, DE_W, DE_E, DE_R, DE_T,
-        KC_MUTE, KC_PSCR, NE_GRV, DE_Z, DE_U, DE_I, DE_O, DE_P, DE_UDIA, MO(_3),
-        DE_A, DE_S, DE_D, DE_F, DE_G, KC_VOLD, KC_VOLU, NE_ACUT, DE_H, DE_J,
-        DE_K, DE_L, DE_ODIA, DE_ADIA, KC_LSFT, DE_Y, DE_X, DE_C, DE_V, DE_B,
-        KC_COPY, KC_PSTE, NE_CIRC, DE_N, DE_M, DE_COMM, DE_DOT, NE_MINS,
-        KC_RSFT, KC_LCTL, KC_LGUI, KC_LALT, MO(_3), LT(_4, KC_MINS), KC_SPC,
-        KC_TRNS, TG(_7), MO(_8), KC_ENTER, MO(_3), MO(_4), KC_LGUI, KC_ESC,
-        KC_RCTL),
-
-    /*
-     *Shifted
-     * .-----------------------------------------------------------------------------------------------------------------------------.---------
-     * | Esc    | 1   °  | 2   §  | 3   ℓ  | 4   »  | 5   «  |        |        |
-     *6  $   | 7    € | 8   „  | 9     “| 0    ” | ß   ẞ  | Back   |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * |  Tab   | Q      | W      | E      | R      | T      |        |        |
-     *Z      | U      | I      | O      | P      | ü      | ̂       |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * |  Mod3  | A      | S      | D      | F      | G      |        |        |
-     *H      | J      | K      | L      | Ö      | ä      | ̀       |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * | LShift | Y      | X      | C      | V      | B      |        |        |
-     *N      | M      | , ;    | . :    | - —    | RShift |  ́      |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|--------+
-     * | Ctrl   |  Super |  LAlt  | Mod3   |  Mod4  | Space  |        |        |
-     *Enter  | Mod3   | Mod4   | Super  | Esc    |  Mod7  | RCtrl  |
-     * '-----------------------------------------------------------------------------------------------------------------------------'---------
-     */
-    [_2] =
-        LAYOUT_ortho_5x15(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS,
-                          KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                          KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                          KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO,
-                          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                          KC_NO, KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO,
-                          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                          KC_NO, KC_NO, KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO,
-                          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO),
-
-    /* Symbol
-     * .--------------------------------------------------------------------------------------------------------------------------------------.
-     * |        |        |        |        |        |        |        |        |
-     * |        |        |        |        |        |        |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
-     * |        | …      | _      | [      | ]      | ^      |        |        |
-     * !      | <      | >      | =      | &      | ſ       | ̷      |
-     * |--------+--------+--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+--------+--------|
-     * |        | \      | /      | {      | }      | *      |        |        |
-     * ?      | (      | )      | -      | :      |  @     |        |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
-     * |        | #      | $      | |      | ~      | `      |        |        |
-     * +      | %      | "      | '      | ;      |        |        |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
-     * |        |        |        |        |        |        |        |        |
-     * |        |        |        |        |        |        |
-     * '--------------------------------------------------------------------------------------------------------------------------------------'
-     *
-     */
-    [_3] = LAYOUT_ortho_5x15(
-        KC_ESC, UC(L'¹'), UC(L'²'), UC(L'³'), UC(L'›'), UC(L'‹'), KC_TRNS,
-        KC_TRNS, KC_BSPC, UC(L'¢'), KC_JYEN, UC(L'‚'), UC(L'‘'), KC_NO, KC_NO,
-        KC_TAB, UC(L'…'), KC_UNDS, KC_LBRC, KC_RBRC, KC_CIRC, KC_TRNS, KC_TRNS,
-        KC_INT1, KC_EXLM, KC_LT, KC_GT, KC_EQL, KC_AMPR, UC(L'ſ'), TG(_3),
-        KC_BSLASH, KC_SLASH, KC_LCBR, KC_RCBR, DE_G, KC_TRNS, KC_TRNS, KC_NO,
-        KC_QUES, KC_LPRN, KC_RPRN, KC_MINUS, KC_COLN, KC_AT, KC_LSFT, KC_HASH,
-        KC_DLR, KC_PIPE, KC_TILD, KC_GRAVE, KC_TRNS, KC_TRNS, KC_NO, KC_PLUS,
-        KC_PERC, KC_DQT, KC_QUOT, KC_SCLN, KC_RSFT, KC_LCTL, KC_LGUI, KC_LALT,
-        TG(_3), MO(_6), KC_SPC, KC_TRNS, KC_TRNS, MO(_7), KC_ENTER, TG(_3),
-        MO(_6), KC_LGUI, KC_ESC, KC_RCTL),
+	KC_LCTL, KC_LGUI, KC_LALT, KC_CAPS, LT(_4, KC_MINS), KC_SPC, /*MO(_vim)*/TD(TD_THUMBMOD_L), TG(_7), TD(TD_THUMBMOD_R), KC_ENT, LT(_4, KC_0), KC_NUHS, KC_LGUI, KC_MINS, OSL(_9)),
 
     /* NavNum
 
@@ -228,7 +136,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_HOME, KC_BSPC, KC_UP, KC_DELETE, KC_END, KC_TRNS,
         KC_TRNS, KC_NO, KC_NO, KC_7, KC_8, KC_9, KC_NO, KC_MINS, KC_NO, KC_PGUP,
-        KC_LEFT, KC_DOWN, KC_RIGHT, KC_PGDOWN, KC_TRNS, KC_TRNS, KC_NO, KC_NO,
+        KC_LEFT, KC_DOWN, KC_RIGHT, KC_PGDN, KC_TRNS, KC_TRNS, KC_NO, KC_NO,
         KC_4, KC_5, KC_6, KC_MINS, KC_NO, KC_LSFT, KC_ESC, KC_PASTE, KC_TAB,
         KC_UNDO, KC_AGAIN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_1, KC_2, KC_3,
         KC_TRNS, KC_RSFT, KC_LCTL, KC_LGUI, KC_NO, KC_NO, KC_NO, LCTL(KC_SPC),
@@ -369,7 +277,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           KC_NO, KC_NO, KC_NO, KC_NO, KC_NO),
     [_8] =
         LAYOUT_ortho_5x15(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS,
-                          KC_TRNS, RESET, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                          KC_TRNS, QK_BOOT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                           KC_NO, KC_NO, KC_F1, KC_F2, KC_F3, KC_F4, KC_NO,
                           KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                           KC_NO, KC_NO, KC_NO, KC_F5, KC_F6, KC_F7, KC_F8,
@@ -380,21 +288,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           KC_NO, KC_NO, KC_NO, TG(_8), KC_TRNS, TG(_8), KC_NO,
                           KC_NO, KC_NO, KC_NO, KC_NO, KC_NO),
 
-    [_vim] = LAYOUT_ortho_5x15(
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_U,
-        KC_Q, KC_SLSH, KC_I, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS),
-
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (!process_achordion(keycode, record)) {
+    return false;
+  }
   switch (keycode) {
     /*case QWERTZ:
       set_single_persistent_default_layer(_DE);
