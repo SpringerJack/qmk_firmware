@@ -18,5 +18,5 @@
 #define MK_W_OFFSET_2 1
 #define MK_W_INTERVAL_2 16
 
-#define HOLD_ON_OTHER_KEY_PRESS
-#define TAPPING_TERM_PER_KEY
+/* #define HOLD_ON_OTHER_KEY_PRESS */
+/* #define TAPPING_TERM_PER_KEY */
