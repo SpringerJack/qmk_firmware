@@ -22,11 +22,11 @@
 #include QMK_KEYBOARD_H
 #include "keymap_german.h"
 #include "keymap_neo2.h"
-#include "features/achordion.h"
+/* #include "features/achordion.h" */
 
 enum layer_names { _DE, _1, _4, _5, _6, _7, _8, _9 };
-// int shifted = 0;
-// bool key(uint16_t k1, uint16_t k2);
+int shifted = 0;
+bool key(uint16_t k1, uint16_t k2);
 
 enum my_keycodes { QWERTZ, CUSTOM, DELWORD };
 
@@ -88,9 +88,9 @@ tap_dance_action_t tap_dance_actions[] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case TD_THUMBMOD_L:
-    case TD_THUMBMOD_R:
-      return 150;
+    /* case TD_THUMBMOD_L: */
+    /* case TD_THUMBMOD_R: */
+    /*   return 150; */
     default:
       return 200;
   }
@@ -105,12 +105,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * Composing keys: KC_RBRC, KC_GRV, KC_EQL
      */
     [_DE] = LAYOUT_ortho_5x15(
-
-        KC_ESC , KC_1,    KC_2,    KC_3,    KC_4,            KC_5,     KC_INS,            KC_DEL,   KC_PSCR,           KC_6,   KC_7,           KC_8,    KC_9,    KC_0,    KC_MINS,
-	KC_TAB , KC_Q,    KC_W,    KC_E,    KC_R,            KC_T,     KC_VOLD,           KC_MUTE,  KC_VOLU,           KC_Y,   KC_U,           KC_I,    KC_O,    KC_P,    KC_LBRC,
-	KC_CAPS, MT(MOD_LALT, KC_A),    MT(MOD_LGUI, KC_S),    MT(MOD_LCTL, KC_D),    MT(MOD_LSFT, KC_F),            KC_G,     C(KC_F3),          C(KC_F1), C(KC_BSPC),        KC_H,   MT(MOD_RSFT, KC_J),           MT(MOD_RCTL, KC_K),    MT(MOD_LGUI, KC_L),    MT(MOD_LALT, KC_SCLN), KC_QUOT,
-	KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,            KC_B,     KC_COPY,           KC_PSTE,  KC_NO,             KC_N,   KC_M,           KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-	KC_LCTL, KC_LGUI, KC_LALT, KC_CAPS, LT(_4, KC_MINS), KC_SPC,   TD(TD_THUMBMOD_L), TG(_7),   TD(TD_THUMBMOD_R), KC_ENT, LT(_4, KC_0),   KC_NUHS, KC_LGUI, KC_MINS, OSL(_9)),
+                              KC_ESC , KC_1,    KC_2,    KC_3,    KC_4,            KC_5,     KC_INS,            TG(_7),   KC_PSCR,           KC_6,   KC_7,           KC_8,    KC_9,    KC_0,    KC_MINS,
+                              KC_TAB , KC_Q,    KC_W,    KC_E,    KC_R,            KC_T,     KC_VOLD,           KC_MUTE,  KC_VOLU,           KC_Y,   KC_U,           KC_I,    KC_O,    KC_P,    KC_LBRC,
+                              KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,            KC_G,     C(KC_F3),          C(KC_F1), C(KC_BSPC),        KC_H,   KC_J,           KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+                              KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,            KC_B,     KC_COPY,           KC_PSTE,  KC_NO,             KC_N,   KC_M,           KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+                              KC_LCTL, KC_LGUI, KC_LALT, KC_CAPS, LT(_4, KC_MINS), KC_SPC,   KC_LCTL,           KC_LALT,  KC_RCTL,           KC_ENT, LT(_4, KC_0),   KC_NUHS, KC_LGUI, KC_RBRC, OSL(_9)),
 
     /* NavNum
 
@@ -132,42 +131,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * '--------------------------------------------------------------------------------------------------------------------------------------'
      */
     [_4] = LAYOUT_ortho_5x15(
-        KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO,
-        KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_HOME, KC_BSPC, KC_UP, KC_DELETE, KC_END, KC_TRNS,
-        KC_TRNS, KC_NO, KC_NO, KC_7, KC_8, KC_9, KC_NO, KC_MINS, KC_NO, KC_PGUP,
-        KC_LEFT, KC_DOWN, KC_RIGHT, KC_PGDN, KC_TRNS, KC_TRNS, KC_NO, KC_NO,
-        KC_4, KC_5, KC_6, KC_MINS, KC_NO, KC_LSFT, KC_ESC, KC_PASTE, KC_TAB,
-        KC_UNDO, KC_AGAIN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_1, KC_2, KC_3,
-        KC_TRNS, KC_RSFT, KC_LCTL, KC_LGUI, KC_NO, KC_NO, KC_NO, LCTL(KC_SPC),
-        KC_TRNS, KC_TRNS, KC_NO, LALT(KC_ENTER), KC_0, KC_COMM, KC_DOT, KC_NO,
-        KC_RCTL),
-    /* Greek
+        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_PGUP, KC_BSPC, KC_UP, KC_DELETE, KC_PGDN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_7, KC_8, KC_9, KC_NO, KC_MINS,
+        KC_NO, KC_HOME, KC_LEFT, KC_DOWN, KC_RIGHT, KC_END, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_4, KC_5, KC_6, KC_MINS, KC_NO,
+        KC_LSFT, KC_ESC, KC_PASTE, KC_TAB, KC_UNDO, KC_AGAIN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_1, KC_2, KC_3, KC_TRNS, KC_RSFT,
+        KC_LCTL, KC_LGUI, KC_NO, KC_NO, KC_NO, LCTL(KC_SPC), KC_TRNS, KC_TRNS, KC_NO, LALT(KC_ENTER), KC_0, KC_COMM, KC_DOT, KC_NO, KC_RCTL),
+                              /* Greek
 
-     * .--------------------------------------------------------------------------------------------------------------------------------------.
-     * |        |        |        |        |        |        |        |        |
-    |        |        |        |        |        |        |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
-     * |        |        |        |        |        |        |        |        |
-    |        |        |        |        |        |        |
-     * |--------+--------+--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+--------+--------|
-     * |        |        |        |        |        |        |        |        |
-    |        |        |        |        |        |        |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
-     * |        |        |        |        |        |        |        |        |
-    |        |        |        |        |        |        |
-     * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
-     * |        |        |        |        |        |        |        |        |
-    |        |        |        |        |        |        |
-     * '--------------------------------------------------------------------------------------------------------------------------------------'
-    [_5] = LAYOUT_ortho_5x15(
-        KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO ,KC_NO
-    ,KC_TRNS      ,KC_TRNS      ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO
-    ,KC_NO        ,KC_NO        ,KC_NO        , KC_NO        ,KC_NO ,KC_NO
-    ,KC_NO        ,KC_NO        ,KC_NO        ,KC_TRNS      ,KC_TRNS      ,KC_NO
-    ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO
-    , KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO ,KC_NO
+                               * .--------------------------------------------------------------------------------------------------------------------------------------.
+                               * |        |        |        |        |        |        |        |        |
+                               |        |        |        |        |        |        |
+                               * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
+                               * |        |        |        |        |        |        |        |        |
+                               |        |        |        |        |        |        |
+                               * |--------+--------+--------+--------+--------+--------+--------+-----------------+--------+--------+--------+--------+--------+--------|
+                               * |        |        |        |        |        |        |        |        |
+                               |        |        |        |        |        |        |
+                               * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
+                               * |        |        |        |        |        |        |        |        |
+                               |        |        |        |        |        |        |
+                               * |--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
+                               * |        |        |        |        |        |        |        |        |
+                               |        |        |        |        |        |        |
+                               * '--------------------------------------------------------------------------------------------------------------------------------------'
+                               [_5] = LAYOUT_ortho_5x15(
+                               KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO ,KC_NO
+                               ,KC_TRNS      ,KC_TRNS      ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO
+                               ,KC_NO        ,KC_NO        ,KC_NO        , KC_NO        ,KC_NO ,KC_NO
+                               ,KC_NO        ,KC_NO        ,KC_NO        ,KC_TRNS      ,KC_TRNS      ,KC_NO
+                               ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO
+                               , KC_NO        ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO ,KC_NO
     ,KC_TRNS      ,KC_TRNS      ,KC_NO        ,KC_NO        ,KC_NO        ,KC_NO
     ,KC_NO        ,KC_NO        ,KC_NO        , KC_NO        ,KC_NO ,KC_NO
     ,KC_NO        ,KC_NO        ,KC_NO        ,KC_TRNS      ,KC_TRNS      ,KC_NO
@@ -264,8 +257,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      |        |        |        |        |        |        |
      * '--------------------------------------------------------------------------------------------------------------------------------------'
      */
-    [_9] =
-        LAYOUT_ortho_5x15(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS,
+    [_9] = LAYOUT_ortho_5x15(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS,
                           KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                           KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                           KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
@@ -276,8 +268,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                           KC_NO, KC_NO, KC_NO, TG(_8), KC_TRNS, TG(_8), KC_NO,
                           KC_NO, KC_NO, KC_NO, KC_NO, KC_NO),
-    [_8] =
-        LAYOUT_ortho_5x15(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS,
+    [_8] = LAYOUT_ortho_5x15(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS,
                           KC_TRNS, QK_BOOT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                           KC_NO, KC_NO, KC_F1, KC_F2, KC_F3, KC_F4, KC_NO,
                           KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
@@ -287,14 +278,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           KC_F12, KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO,
                           KC_NO, KC_NO, KC_NO, KC_NO, KC_LCTL, KC_NO, KC_LALT,
                           KC_NO, KC_NO, KC_NO, TG(_8), KC_TRNS, TG(_8), KC_NO,
-                          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO),
-
+                          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO)
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (!process_achordion(keycode, record)) {
-    return false;
-  }
+  /* if (!process_achordion(keycode, record)) { */
+  /*   return false; */
+  /* } */
   switch (keycode) {
     /*case QWERTZ:
       set_single_persistent_default_layer(_DE);
@@ -308,22 +298,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	SEND_STRING(SS_LCTL(SS_TAP(X_BSPC)));
       }
       break;
-    case TD(TD_THUMBMOD_R):
-    case TD(TD_THUMBMOD_L):
-      if (record->event.pressed) {
-	if (record->event.pressed && control_pressed++ > 0) {
-	  clear_oneshot_mods();
-	  tap_code16(C(KC_F3));
-	  return false;
-	}
-      } else {
-	control_pressed--;
-      }
-      break;
+    /* case TD(TD_THUMBMOD_R): */
+    /* case TD(TD_THUMBMOD_L): */
+    /*   if (record->event.pressed) { */
+    /*     if (record->event.pressed && control_pressed++ > 0) { */
+    /*       clear_oneshot_mods(); */
+    /*       tap_code16(C(KC_F3)); */
+    /*       return false; */
+    /*     } */
+    /*   } else { */
+    /*     control_pressed--; */
+    /*   } */
+    /*   break; */
   }
   return true;
-}
-
-void matrix_scan_user(void) {
-  achordion_task();
 }
