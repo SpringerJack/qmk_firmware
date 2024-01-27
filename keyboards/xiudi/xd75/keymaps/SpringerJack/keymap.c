@@ -47,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_DE] = LAYOUT_ortho_5x15(
                               KC_ESC , KC_1,    KC_2,    KC_3,    KC_4,            KC_5,     KC_INS,            TG(_7),   KC_PSCR,           KC_6,   KC_7,           KC_8,    KC_9,    KC_0,    KC_MINS,
                               KC_TAB , KC_Q,    KC_W,    KC_E,    KC_R,            KC_T,     KC_VOLD,           KC_MUTE,  KC_VOLU,           KC_Y,   KC_U,           KC_I,    KC_O,    KC_P,    KC_LBRC,
-                              KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,            KC_G,     C(KC_F3),          C(KC_F1), C(KC_BSPC),        KC_H,   KC_J,           KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+                              KC_CAPS, KC_A,    LGUI_T(KC_S),    LALT_T(KC_D),    LCTL_T(KC_F),    KC_G,     C(KC_F3),          C(KC_F1), C(KC_BSPC),        KC_H,   LCTL_T(KC_J),   LALT_T(KC_K),    LGUI_T(KC_L),    KC_SCLN, KC_QUOT,
                               KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,            KC_B,     KC_COPY,           KC_PSTE,  TG(_7),            KC_N,   KC_M,           KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
                               KC_NO,   KC_LGUI,   KC_NO,   KC_CAPS, MO(_4),          KC_SPC,   MO(_LMOD),         KC_NO,    MO(_RMOD),         KC_ENT, MO(_4),         KC_NUHS, KC_NO,   KC_RBRC, OSL(_9)),
 
@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_4] = LAYOUT_ortho_5x15(
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_PGUP, KC_BSPC, KC_UP, KC_DELETE, KC_PGDN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_7, KC_8, KC_9, KC_NO, KC_MINS,
-        KC_NO, KC_HOME, KC_LEFT, KC_DOWN, KC_RIGHT, KC_END, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_4, KC_5, KC_6, KC_MINS, KC_NO,
+        KC_NO, LGUI_T(KC_HOME), KC_LEFT, KC_DOWN, KC_RIGHT, KC_END, KC_TRNS, KC_TRNS, KC_NO, KC_NO, LCTL_T(KC_4), LALT_T(KC_5), LGUI_T(KC_6), KC_MINS, KC_NO,
         KC_LSFT, KC_ESC, KC_PASTE, KC_TAB, KC_UNDO, KC_AGAIN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_1, KC_2, KC_3, KC_TRNS, KC_RSFT,
         KC_LCTL, KC_LGUI, KC_NO, KC_NO, KC_NO, LCTL(KC_SPC), KC_LCTL, KC_TRNS, KC_LCTL, LALT(KC_ENTER), KC_0, KC_COMM, KC_DOT, KC_NO, KC_RCTL),
     
