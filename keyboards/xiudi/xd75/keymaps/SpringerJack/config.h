@@ -19,4 +19,6 @@
 #define MK_W_INTERVAL_2 16
 
 /* #define HOLD_ON_OTHER_KEY_PRESS */
-/* #define TAPPING_TERM_PER_KEY */
+#define TAPPING_TERM_PER_KEY
+#define RETRO_TAPPING
+#define ONESHOT_TAP_TOGGLE 2
