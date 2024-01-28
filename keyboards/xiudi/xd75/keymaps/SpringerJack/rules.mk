@@ -12,3 +12,4 @@ BLUETOOTH_ENABLE = no
 RGBLIGHT_ENABLE = no
 SLEEP_LED_ENABLE = no
 # TAP_DANCE_ENABLE = yes
+SRC+=features/flow.c

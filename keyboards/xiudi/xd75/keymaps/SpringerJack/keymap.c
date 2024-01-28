@@ -23,22 +23,29 @@
 #include "keymap_german.h"
 #include "keymap_neo2.h"
 #include "action_layer.h"
+#include "features/flow.h"
 
 enum layer_names { _DE, _CMOD, _NN, _FN }; // _LMOD, _RMOD, 
 int shifted = 0;
 bool key(uint16_t k1, uint16_t k2);
 
-enum my_keycodes { FN = SAFE_RANGE };
+enum my_keycodes { FN = SAFE_RANGE, OS_CMOD, OS_NN};
 
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    default:
-      return 200;
-  }
-}
+/* uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) { */
+/*   switch (keycode) { */
+/*     default: */
+/*       return 200; */
+/*   } */
+/* } */
 
-uint16_t control_pressed = 0;
+const uint16_t flow_config[FLOW_COUNT][2] = {
+  
+};
 
+const uint16_t flow_layers_config[FLOW_LAYERS_COUNT][2] = {
+  {OS_CMOD, _CMOD},
+  {OS_NN, _NN}
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -50,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                               KC_TAB , KC_NO,   KC_W,    KC_E,    KC_R,    KC_T,   KC_VOLD,   KC_MUTE,  KC_VOLU,    KC_Y,   KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
                               KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,   KC_NO,     KC_NO,    C(KC_BSPC), KC_H,   KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
                               KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   KC_MPLY,   KC_MPRV,  KC_MNXT,    KC_N,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                              KC_NO,   KC_Q,    KC_NO,   KC_CAPS, MO(_NN), KC_SPC, MO(_CMOD), FN,       MO(_CMOD),  KC_ENT, MO(_NN), KC_NUHS, KC_NO,   KC_RBRC, KC_NO),
+                              KC_NO,   KC_Q,    KC_NO,   KC_CAPS, MO(_NN), KC_SPC, OS_CMOD,   FN,       OS_CMOD,    KC_ENT, MO(_NN), KC_NUHS, KC_NO,   KC_RBRC, KC_NO),
 
     [_CMOD] = LAYOUT_ortho_5x15(
                               KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
@@ -78,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO, KC_PGUP, KC_BSPC, KC_UP, KC_DELETE, KC_PGDN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_7, KC_8, KC_9, KC_NO, KC_MINS,
         KC_NO, KC_HOME, KC_LEFT, KC_DOWN, KC_RIGHT, KC_END, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_4, KC_5, KC_6, KC_MINS, KC_NO,
         KC_LSFT, KC_ESC, KC_PASTE, KC_TAB, KC_UNDO, KC_AGAIN, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_1, KC_2, KC_3, KC_TRNS, KC_RSFT,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_0, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 
     /* Below is infrequently used */
     /* [_MOUSE] = */
@@ -115,6 +122,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (!update_flow(keycode, record->event.pressed, record->event.key)) return false;
   switch(keycode) {
     case FN:
       if (record->event.pressed) {
@@ -124,4 +132,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
   }
   return true;
+}
+
+void matrix_scan_user(void) {
+  flow_matrix_scan();
 }
