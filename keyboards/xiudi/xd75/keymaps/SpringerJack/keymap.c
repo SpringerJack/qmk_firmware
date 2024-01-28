@@ -24,7 +24,6 @@
 #include QMK_KEYBOARD_H
 #include "keymap_german.h"
 #include "keymap_neo2.h"
-#include "action_layer.h"
 #include "features/flow.h"
 
 enum layer_names { _DE, _CMOD, _NN, _FN }; // _LMOD, _RMOD, 
