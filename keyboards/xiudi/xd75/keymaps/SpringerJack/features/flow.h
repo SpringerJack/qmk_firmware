@@ -23,5 +23,3 @@ bool update_flow(
     bool pressed,
     keypos_t key_position
 );
-
-void flow_matrix_scan(void);
